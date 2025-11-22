@@ -1,0 +1,3 @@
+[env]
+_.path = ["./sh/bin"]
+_.source = ["./sh/mise.sh"]
