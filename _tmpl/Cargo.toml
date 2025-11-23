@@ -18,9 +18,9 @@ rustdoc-args = ["--cfg", "docsrs"]
 [dependencies]
 
 [dev-dependencies]
-aok = "0.1.17"
-log = "0.4.27"
-log_init = "0.1.9"
+aok = "0.1.18"
+log = "0.4.28"
+log_init = "0.1.28"
 static_init = "1.0.4"
 
 [dev-dependencies.tokio]
