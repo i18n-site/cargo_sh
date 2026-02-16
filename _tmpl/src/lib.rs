@@ -1,3 +1,4 @@
 #![cfg_attr(docsrs, feature(doc_cfg))]
 
-pub fn _tmpl() {}
+mod error;
+pub use error::{Error, Result};
