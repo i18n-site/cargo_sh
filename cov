@@ -1,0 +1,49 @@
+#!/usr/bin/env bash
+
+set -e
+
+SH="${BASH_SOURCE[0]}" && . ${SH%/*}/cd_cargo.sh
+
+if ! command -v cargo-llvm-cov &>/dev/null; then
+  cargo install cargo-llvm-cov
+fi
+
+if ! command -v toon 2>/dev/null; then
+  bun i -g @toon-format/cli
+fi
+
+tmpdir=$(mktemp -d -t aitest)
+
+trap "rm -rf \"$tmpdir\"" EXIT
+
+tmpjson=$tmpdir/report.json
+
+cargo llvm-cov --json --output-path "$tmpjson"
+
+bun -e '
+import fs from "fs";
+import path from "path";
+const f = process.argv.pop(), p = process.cwd()+path.sep;
+fs.writeFileSync(f, fs.readFileSync(f, "utf8").split(p).join(""));
+' -- "$tmpjson"
+
+COV_REPORT=$tmpdir/cov.report
+
+jq '[
+  .data[].files[]
+  | {
+      file: .filename,
+      lines: {
+        covered: .summary.lines.covered,
+        total: .summary.lines.count,
+        percent: (.summary.lines.covered / .summary.lines.count * 100 | floor)
+      },
+      uncovered_lines:
+        ([.segments[] | select(.[2] == 0) | .[0]]
+         | sort
+         | unique)
+    }
+  | select(.lines.covered < .lines.total)
+]' "$tmpjson" | toon >$COV_REPORT
+
+echo "→ $COV_REPORT"
