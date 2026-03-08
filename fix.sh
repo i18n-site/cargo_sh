@@ -102,5 +102,4 @@ fix_loop "$DIR/clippy.sh 2>&1 | rg -v '^\s+Checking\s'" \
   has_warnings
 
 rm $LOG
-$DIR/udep.sh
 echo ✅
