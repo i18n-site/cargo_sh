@@ -66,6 +66,8 @@ has_line() {
 
 PROMPT_CHECK="，改完后 ${CHECK}，验证修改正确"
 
+fix_loop 'rg "dyn Error"|rg Result|rg examples' has_line '不用Box<dyn Error>,改用anyhow，依赖用cargo add --dev anyhow安装'
+
 check_use() {
   local cmd=$1
   local scope=$2
