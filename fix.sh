@@ -91,6 +91,8 @@ check_use "rg '(^|[^$])crate::' -t rust | rg -v \":\s*use \" | rg -v \":\s*//\""
 
 fix_loop 'rg -t rs RapidHashMap|rg -v " as Map"' has_line "请在文件开头用 use rapidhash::RapidHashMap as Map; 的简化 RapidHashMap 别名（注释中，也不写RapidHashMap, 直接写Map）${PROMPT_CHECK}"
 
+fix_loop 'rg UNIX_EPOCH' has_line 'cargo add ts_ -F sec (如果是examples代码 cargo add --dev ts_ -F sec) ， 用 ts_::sec 获取秒级时间戳'
+
 has_warnings() {
   grep -qiE '^(warning|error):' "$1"
 }
