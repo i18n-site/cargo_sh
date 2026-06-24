@@ -5,6 +5,11 @@ DIR=$(realpath $0) && DIR=${DIR%/*}
 set -x
 export CARGO_REGISTRIES_CRATES_IO_PROTOCOL=git
 cargo update
+
+if ! command -v cargo-upgrade 2>/dev/null; then
+  cargo install cargo-upgrades
+fi
+
 cargo upgrade --recursive --verbose --incompatible
 ncu -u
 bun i
