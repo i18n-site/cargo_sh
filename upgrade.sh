@@ -7,7 +7,7 @@ export CARGO_REGISTRIES_CRATES_IO_PROTOCOL=git
 cargo update
 
 if ! command -v cargo-upgrade 2>/dev/null; then
-  cargo install cargo-upgrades
+  cargo install cargo-edit
 fi
 
 cargo upgrade --recursive --verbose --incompatible
