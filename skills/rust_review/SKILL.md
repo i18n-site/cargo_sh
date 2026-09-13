@@ -108,6 +108,7 @@ name: rust_review
   格式化时间用 jiff
   并发字典用 papaya
   消息队列用 crossfire
+  避免用锁，可以用 crossfire 优化
   节约字符串内存用 hipstr
   同步锁用 parking_lot
   日志用 log ，测试中用 ctor 配合 log_init::init() 初始化日志显示（开发依赖用 cargo add -D 添加）
@@ -118,7 +119,7 @@ name: rust_review
   gxhash::{HashMap, HashSet};
 - 从值转枚举用过程宏 strum
 - 避免使用 dyn，可以用 impl 泛型，或者 cargo add enum_dispatch
-- 禁止二次导出第三方模块（也别导出同一个工作空间的其他模块）,暴露接口要设计，低耦合，高内聚
+- 禁止二次导出。crate 的暴露接口要设计，低耦合，高内聚
 
 10. 小步迭代，每当完成一个修改，都运行../sh/clippy.sh， 修复警告（避免直接使用 allow，除非绝对必要）， 然后运行 ./test.sh
 
