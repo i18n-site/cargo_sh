@@ -1,0 +1,6 @@
+[env]
+_.source = ["./sh/mise.sh"]
+_.path = ["./sh/bin"]
+
+[tools]
+uv = "latest"
