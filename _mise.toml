@@ -1,7 +1,11 @@
-[env]
-_.source = ["./sh/mise.sh"]
-_.path = ["./sh/bin"]
-
 [tools]
-python = "latest"
+python = "3.14"
 uv = "latest"
+
+[tasks.reverify-sync]
+description = "Install verification and topology audit environment with uv"
+run = "uv sync"
+
+[tasks.audit-topology]
+description = "Analyze cross-crate dependency and call topology"
+run = "uv run python tool/audit_topology.py"

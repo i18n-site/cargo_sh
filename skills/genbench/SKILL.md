@@ -6,7 +6,7 @@ rust 项目创建性能评测步骤
 
 1. 安装依赖，基于 criterion 开发测试
 
-cargo add --dev criterion tikv-jemallocator humansize
+cargo add --dev criterion rusty_alloc-api humansize
 
 2. 设计评测指标
 
