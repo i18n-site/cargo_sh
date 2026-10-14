@@ -3,9 +3,10 @@
 // 未引用扫描: bun unused.js [目录]，缺省当前目录
 
 import { $ } from "zx";
-import { mkdtemp, rm, stat } from "node:fs/promises";
+import { existsSync } from "node:fs";
+import { mkdtemp, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
-import { join, resolve } from "node:path";
+import { dirname, join, resolve } from "node:path";
 
 const EXIT_OK = 0,
   EXIT_FAIL = 1,
@@ -47,24 +48,14 @@ const binHas = async (name, cwd) => {
       .trim(),
   outPick = (err, idx) => (idx === OUT_STDOUT ? err.stdout ?? "" : err.stderr ?? ""),
   errDump = (err) => (outPick(err, OUT_STDOUT) + outPick(err, OUT_STDERR)).trim(),
-  manifestHas = async (dir) => {
-    try {
-      return (await stat(join(dir, "Cargo.toml"))).isFile();
-    } catch {
-      return false;
-    }
-  },
+  manifestHas = (dir) => existsSync(join(dir, "Cargo.toml")),
+  dirHas = (dir) => existsSync(dir),
   workspaceTopFind = async (start) => {
-    const { dirname } = await import("node:path");
     let cur = resolve(start),
       top = "";
-    try {
-      if (!(await stat(cur)).isDirectory()) return "";
-    } catch {
-      return "";
-    }
+    if (!dirHas(cur)) return "";
     for (;;) {
-      if (await manifestHas(cur)) top = cur;
+      if (manifestHas(cur)) top = cur;
       const parent = dirname(cur);
       if (parent === cur) break;
       cur = parent;
