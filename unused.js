@@ -46,16 +46,37 @@ const binHas = async (name, cwd) => {
       .join("\n\n")
       .trim(),
   outPick = (err, idx) => (idx === OUT_STDOUT ? err.stdout ?? "" : err.stderr ?? ""),
-  errDump = (err) => (outPick(err, OUT_STDOUT) + outPick(err, OUT_STDERR)).trim();
+  errDump = (err) => (outPick(err, OUT_STDOUT) + outPick(err, OUT_STDERR)).trim(),
+  manifestHas = async (dir) => {
+    try {
+      return (await stat(join(dir, "Cargo.toml"))).isFile();
+    } catch {
+      return false;
+    }
+  },
+  workspaceTopFind = async (start) => {
+    const { dirname } = await import("node:path");
+    let cur = resolve(start),
+      top = "";
+    try {
+      if (!(await stat(cur)).isDirectory()) return "";
+    } catch {
+      return "";
+    }
+    for (;;) {
+      if (await manifestHas(cur)) top = cur;
+      const parent = dirname(cur);
+      if (parent === cur) break;
+      cur = parent;
+    }
+    return top;
+  };
 
 const targetResolve = async (argv) => {
-  const target = resolve(argv[ARG_TARGET] || ".");
-  try {
-    if (!(await stat(target)).isDirectory()) return [EXIT_FAIL, ""];
-  } catch {
-    return [EXIT_FAIL, ""];
-  }
-  return [EXIT_OK, target];
+  const start = resolve(argv[ARG_TARGET] || process.cwd()),
+    top = await workspaceTopFind(start);
+  if (!top) return [EXIT_FAIL, ""];
+  return [EXIT_OK, top];
 };
 
 const unusedScan = async () => {
