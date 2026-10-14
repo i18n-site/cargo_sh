@@ -122,7 +122,6 @@ name: rust_review
 - 禁止二次导出。crate 的暴露接口要设计，低耦合，高内聚
 - 充分利用编译期计算，比如完美散列库 phf
 - simd 用 fearless_simd
-- 性能瓶颈或基准交付阶段，必须引入配置文件引导优化（详细参考 doc/pgo.md，使用 cargo-pgo 插桩构建、采集轨迹并实施优化重编，可通过 ./sh/pgo_bench.sh 自动化执行）
 
 10. 测试规范
 
