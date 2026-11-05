@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+# 提交前自动压缩本次变更的 svg（svgo 经 bun 运行）
+DIR=$(realpath "$0") && DIR=${DIR%/*}
+cd "$DIR/../.." || exit 1
+
+staged=$(git diff --cached --name-only --diff-filter=ACM -- '*.svg')
+if [ -z "$staged" ]; then
+  exit 0
+fi
+
+bunx svgo "$staged"
+git add "$staged"
